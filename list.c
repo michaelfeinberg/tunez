@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "list.h"
+/*
 typedef struct song_node{
   char name[256];
   char artist[256];
   struct song_node *next;
 } song_node;
-
+*/
 song_node * insert_front(song_node *front, char newName[], char newArtist[]){
   song_node * newFront = (song_node *)malloc(sizeof(song_node));
   strncpy(newFront->name,newName,256);
