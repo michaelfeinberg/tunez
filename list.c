@@ -20,7 +20,7 @@ song_node * insert_front(song_node *front, char newName[], char newArtist[]){
 
 song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   //If list is null or song is alphabetically before first element
-  if(!*front || strncmp(newArtist,front->artist,256)<0){
+  if(!front || strncmp(newArtist,front->artist,256)<0){
     return insert_front(front,newName,newArtist);
   }
   
@@ -29,7 +29,7 @@ song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   
   char *currArtist = curr->artist;
   //loop through list until null or until the song is alphabetically first
-  while(*curr && strncmp(newArtist,currArtist,256)>0){
+  while(curr && strncmp(newArtist,currArtist,256)>0){
     prev = curr;
     curr = curr->next; 
   }
