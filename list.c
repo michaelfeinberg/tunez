@@ -22,16 +22,15 @@ song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   //If list is null or song is alphabetically before first element
   //printf("!front = %d\n",!front);
 
-  if(!front || strncmp(newArtist,front->artist,256)<0){
+  if(!front || strncmp(newName,front->name,256)<0){
     return insert_front(front,newName,newArtist);
   }
   
   song_node * prev = front;
   song_node * curr = front->next;
   
-  char *currArtist = curr->artist;
   //loop through list until null or until the song is alphabetically first
-  while(curr && strncmp(newArtist,currArtist,256)>0){
+  while(curr && strncmp(newName,curr->name,256)>0){
     prev = curr;
     curr = curr->next; 
   }
@@ -43,14 +42,21 @@ song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   return front;
   
 }
-
+void print_song(song_node * front){
+  if(front==NULL){
+    printf("This song does not exist\n\n");
+  }else{
+    printf("Name: %s\n",front->name);
+    printf("Artist: %s\n",front->artist);
+  }
+}
 void print_list(song_node * front){
   if(front==NULL){
-    printf("There are no songs on this list\n");
+    printf("There are no songs on this list\n\n");
   }else{
     while(front != NULL){
-      printf("Name: %s\n", front->name);
-      printf("Artist: %s\n\n", front->artist);
+      print_song(front);
+      printf("\n");
       front = front->next;
     }
     
@@ -69,7 +75,7 @@ song_node * free_list(song_node *front){
 song_node * find_song(song_node * front, char name[]){
   song_node * curr = front;
   while(curr){
-    if(!strcmp(n->name,name)){
+    if(!strcmp(curr->name,name)){
       return curr;
     }
     curr = curr->next;
@@ -80,7 +86,7 @@ song_node * find_song(song_node * front, char name[]){
 song_node * find_artist(song_node * front, char artist[]){
   song_node * curr = front;
   while(curr){
-    if(!strcmp(n->artist,artist)){
+    if(!strcmp(curr->artist,artist)){
       return curr;
     }
     curr = curr->next;
@@ -95,6 +101,7 @@ int get_size(song_node * front){
     front = front -> next;
     length++;
   }
+  return length;
 }
 
 song_node * rand_song(song_node * front){
@@ -139,7 +146,7 @@ int main(){
   printf("print 3\n"); 
   print_list(head);
   
-  free_list(head);
+  head = free_list(head);
   printf("print 4\n"); 
   print_list(head);
   return 0;
