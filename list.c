@@ -55,6 +55,43 @@ void print_list(song_node * front){
   }
 }
 
+//----------------------------Felix's work, you can break this if it not good
+
+struct song_node * find_song(struct song_node * n, char name[]){
+  if(!n){
+    return 0;
+  }
+  while(n){
+    //printf("%s--%s\n", n->name, name);
+    if(!(strcmp(n->name,name))){
+      return n;
+    }
+    n=n->next;
+  }
+  return 0;
+}
+
+struct song_node * find_artist(struct song_node * n, char artist[]){
+  if(!n){
+    return 0;
+  }
+  if(!(strcmp(n->artist,artist)))
+    return n;
+  while(n->next){
+    n=n->next;
+    //printf("%s--%s\n", n->name, n->artist);
+    if(!(strcmp(n->artist,artist))){
+      return n;
+    }
+  }
+  return 0;
+}
+
+
+//-----
+
+
+
 int main(){
   
 
