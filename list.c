@@ -91,7 +91,6 @@ struct song_node * find_artist(struct song_node * n, char artist[]){
 //-----
 
 
-
 int main(){
   
 
@@ -101,3 +100,4 @@ int main(){
 
   return 0;
 }
+
