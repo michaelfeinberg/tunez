@@ -56,7 +56,7 @@ void print_list(song_node * front){
     
   }
 }
-
+/*
 song_node * free_list(song_node *front){
   if(front != NULL){
     song_node * next = front -> next;
@@ -65,6 +65,59 @@ song_node * free_list(song_node *front){
   }else{
     return NULL;
   }
+*/
+song_node * find_song(song_node * front, char name[]){
+  song_node * curr = front;
+  while(curr){
+    if(!strcmp(n->name,name)){
+      return curr;
+    }
+    curr = curr->next;
+  }
+  return 0;
+}
+
+song_node * find_artist(song_node * front, char artist[]){
+  song_node * curr = front;
+  while(curr){
+    if(!strcmp(n->artist,artist)){
+      return curr;
+    }
+    curr = curr->next;
+  }
+  return 0;
+}
+
+
+int get_size(song_node * front){
+  int length = 0;
+  while(front){
+    front = front -> next;
+    length++;
+  }
+}
+
+song_node * rand_song(song_node * front){
+  int length = get_size(front);
+  sranddev();
+  int place = rand() / length;
+  while(place){
+    front = front->next;
+    place--;
+  }
+  return front;
+}
+
+song_node * free_list(song_node * front){
+  
+  if(!front){
+    return 0;
+  }else{
+    song_node * next = front->next;
+    free(front);
+    return free_list(next);
+  }
+  
 }
 
 int main(){

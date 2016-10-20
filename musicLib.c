@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,13 +26,41 @@ struct song_node * search_song(song_node *t[], char name[], char artist[]){
   return (find_song(t[pos], name));
 }
 
-/*
-struct song_node * search_articst(song_node *t[], char artist[]){
+struct song_node * search_artist(song_node *t[], char artist[]){
   int pos = find_spot(artist[0]);
-  struct song_node *a_node = t[pos];
-  struct song
-  a_node = find_artist(a_node, artist);
-  if(!a_node){
-    return 0;
+  return (find_artist(t[pos], artist));
+}
+
+void print_artist(song_node *t[],  char artist[]){
+  int pos = find_spot(artist[0]);
+  struct song_node *n = (find_artist(t[pos], artist));
+  if(!n){
+    printf("There are no songs by that artist\n");
   }
-  
+  else{
+    printf("*%s-%s*", n->name, n->artist);
+      while(n->next){
+	n=n->next;
+	if(strcmp(n->artist, artist)){//if not the same artist, break
+	  break;
+	}
+	printf("*%s-%s*", n->name, n->artist);
+      }
+      printf("\n");
+  }
+}
+
+void print_letter(song_node *t[], char letter){
+  int pos = find_spot(letter);
+  printf("%c",letter);
+  print_list(t[pos]);
+}
+
+void print_library(song_node *t[]){
+  int i;
+  for(i=0; i<26; i++){
+    printf("%c", 97+i);
+    print_list(table[i]);
+    printf("\n");
+  }
+}
