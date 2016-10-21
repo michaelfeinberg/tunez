@@ -1,28 +1,46 @@
+//Michael Feinberg + Felix Rieg-Baumhauer
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "list.h"
-/*
-typedef struct song_node{
-  char name[256];
-  char artist[256];
-  struct song_node *next;
-} song_node;
-*/
-song_node * insert_front(song_node *front, char newName[], char newArtist[]){
-  song_node * newFront = (song_node *)malloc(sizeof(song_node));
-  strncpy(newFront->name,newName,256);
-  strncpy(newFront->artist,newArtist,256);
-  newFront->next = front;
+#include <time.h>
 
-  return newFront;
+#include "list.h"
+
+void print_list( struct song_node *n ) {
+  printf("[ ");
+  while(n) {
+    printf("%s-%s, ", n->name, n->artist);
+    n = n->next;
+  }
+  printf("]\n");
+}
+
+void print_song(struct song_node *n){
+  if(!n){
+    printf("That song does not exist\n");
+  }
+  else{
+    printf("%s-%s\n", n->name, n->artist);
+  }
+}
+
+
+struct song_node * insert_front( struct song_node *n, char name[], char artist[]) {
+
+  struct song_node *new = (struct song_node *)malloc(sizeof(struct song_node));
+
+  new->next = n;
+  strcpy(new->name, name);
+  strcpy(new->artist, artist);
+
+  return new;
 }
 
 song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   //If list is null or song is alphabetically before first element
   //printf("!front = %d\n",!front);
 
-  if(!front || strncmp(newName,front->name,256)<0){
+  if(!front || strncmp(newArtist,front->artist,256)<0){
     return insert_front(front,newName,newArtist);
   }
   
@@ -30,7 +48,7 @@ song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   song_node * curr = front->next;
   
   //loop through list until null or until the song is alphabetically first
-  while(curr && strncmp(newName,curr->name,256)>0){
+  while(curr && strncmp(newArtist,curr->artist,256)>0){
     prev = curr;
     curr = curr->next; 
   }
@@ -40,56 +58,46 @@ song_node * insert_song(song_node *front, char newName[], char newArtist[]){
   //link entire list and return front
   prev->next = endList;
   return front;
-  
 }
-void print_song(song_node * front){
-  if(front==NULL){
-    printf("This song does not exist\n\n");
-  }else{
-    printf("Name: %s\n",front->name);
-    printf("Artist: %s\n",front->artist);
+
+struct song_node * free_list( struct song_node *n ) {
+
+  struct song_node *f = n;
+  while ( n ) {
+    n = n->next;
+    printf("freeing node: [%s-%s]\n", f->name, f->artist );
+    free(f);
+    f = n;    
   }
+  return n;
 }
-void print_list(song_node * front){
-  if(!front){
-    printf("There are no songs on this list\n\n");
-  }else{
-    while(front){
-      print_song(front);
-      printf("\n");
-      front = front->next;
+
+struct song_node * find_song(struct song_node * n, char name[]){
+  if(!n){
+    return 0;
+  }
+  while(n){
+    //printf("%s--%s\n", n->name, name);
+    if(!(strcmp(n->name,name))){
+      return n;
     }
-    
-  }
-}
-/*
-song_node * free_list(song_node *front){
-  if(front != NULL){
-    song_node * next = front -> next;
-    free(front);
-    free_list(front->next);
-  }else{
-    return NULL;
-  }
-*/
-song_node * find_song(song_node * front, char name[]){
-  song_node * curr = front;
-  while(curr){
-    if(!strcmp(curr->name,name)){
-      return curr;
-    }
-    curr = curr->next;
+    n=n->next;
   }
   return 0;
 }
 
-song_node * find_artist(song_node * front, char artist[]){
-  song_node * curr = front;
-  while(curr){
-    if(!strcmp(curr->artist,artist)){
-      return curr;
+struct song_node * find_artist(struct song_node * n, char artist[]){
+  if(!n){
+    return 0;
+  }
+  if(!(strcmp(n->artist,artist)))
+    return n;
+  while(n->next){
+    n=n->next;
+    //printf("%s--%s\n", n->name, n->artist);
+    if(!(strcmp(n->artist,artist))){
+      return n;
     }
-    curr = curr->next;
   }
   return 0;
 }
@@ -106,8 +114,9 @@ int get_size(song_node * front){
 
 song_node * rand_song(song_node * front){
   int length = get_size(front);
-  sranddev();
-  int place = rand() % length;
+  srand(time(NULL));
+  //sranddev();
+  int place = rand() % length;//was divison before
   while(place){
     front = front->next;
     place--;
@@ -115,17 +124,6 @@ song_node * rand_song(song_node * front){
   return front;
 }
 
-song_node * free_list(song_node * front){
-  
-  if(!front){
-    return 0;
-  }else{
-    song_node * next = front->next;
-    free(front);
-    return free_list(next);
-  }
-  
-}
 song_node * remove_song(song_node * front, char songName[]) {
   if(!front){
     return NULL;
@@ -150,20 +148,21 @@ song_node * remove_song(song_node * front, char songName[]) {
     return front;
   }
 }
+
+//--------------------------------
+/*
 int main(){
   
-  song_node * head; 
-  char song1[256] = "Hello";
-  char art1[256] = "Adele";
+  struct song_node * head = 0; 
+  char song1[256] = "hello";
+  char art1[256] = "adele";
   
-  char song2[256] = "Take On Me";
-  char art2[256] = "A-Ha";
-
-  char song3[256] = "Rolling in the Deep";
-  char art3[256] = "Adele";
-
+  char song2[256] = "take On Me";
+  char art2[256] = "a-Ha";
+  char song3[256] = "btake On Me";
+  char art3[256] = "ba-Ha";
   printf("print 1\n");
-  print_list(head);
+  //print_list(head);
   
   head = insert_song(head,song1,art1);
   printf("print 2\n"); 
@@ -171,23 +170,64 @@ int main(){
   
   head = insert_song(head,song2,art2);
   head = insert_song(head,song3,art3);
-
   printf("print 3\n"); 
   print_list(head);
-  
-  song_node * rando = rand_song(head);
-  printf("print 4\n");
-  print_song(rando);
-  
-  head = remove_song(head,rando->name);
-  
-  printf("print 5\n");
-  print_list(head);
 
-  head = free_list(head);
-  printf("print 6\n"); 
+  head = remove_song(head, "take On Me");
+
   print_list(head);
   
+  head = free_list(head);
+  printf("print 4\n"); 
+  print_list(head);
+  return 0;
+}
+*/
+
+/*
+int main(){
+  struct song_node *list = 0;
+  
+  print_list( list );
+ 
+  list = insert_song( list, "hot rod", "beatles");
+
+  list = insert_song( list, "hot red", "beatlos");
+  list = insert_song( list, "hot rad", "beatles");
+  list = insert_song( list, "hot rud", "beatlas");
+  
+  print_list( list );
+
+  struct song_node *found = 0;
+  found = find_song(list, "hot red");
+  print_list(found);
+  printf("%s-%s\n", found->name, found->artist);
+  
+  list = free_list( list );
+
+  print_list( list );
   
   return 0;
 }
+*/
+
+/*
+int main() {
+
+  struct node *list = 0;
+
+  print_list( list );
+
+  int i;
+  for (i=0; i < 10; i++)
+    list = insert_front( list, i);
+
+  print_list( list );
+
+  list = free_list( list );
+
+  print_list( list );
+  
+  return 0;
+}
+*/
