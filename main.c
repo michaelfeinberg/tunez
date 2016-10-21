@@ -2,11 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "list.h"
 #include "musicLib.h"
 
 int main(){
+  //sranddev();
+  srand(time(NULL));
+
   printf("The playlist prior to any actions\n");
   print_library(table);
   add_song(table, "alive", "pearl jam");

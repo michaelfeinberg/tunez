@@ -56,10 +56,10 @@ void print_artist(song_node *t[],  char artist[]){
 void shuffle(song_node *t[], int num){
   int i;
   printf("Lets Shuffle:\n");
-  srand(time(NULL));
+  //srand(time(NULL));
   //srandev();
-  for(int i=0; i<num; i++){
-    srand(time(NULL));
+  for(i=0; i<num; i++){
+    //srand(time(NULL));
     //could use
     //srandev();
     int letter = rand() % 26;
@@ -93,7 +93,7 @@ song_node * delete_song(song_node *t[], char name [], char artist []){
 
 void delete(song_node *t[]){
   int i;
-  for(int i=0; i<26; i++){
+  for(i=0; i<26; i++){
     free_list(t[i]);
     t[i]=0;
   }

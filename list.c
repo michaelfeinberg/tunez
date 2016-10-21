@@ -114,7 +114,7 @@ int get_size(song_node * front){
 
 song_node * rand_song(song_node * front){
   int length = get_size(front);
-  srand(time(NULL));
+  //srand(time(NULL));
   //sranddev();
   int place = rand() % length;//was divison before
   while(place){
