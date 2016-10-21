@@ -51,10 +51,10 @@ void print_song(song_node * front){
   }
 }
 void print_list(song_node * front){
-  if(front==NULL){
+  if(!front){
     printf("There are no songs on this list\n\n");
   }else{
-    while(front != NULL){
+    while(front){
       print_song(front);
       printf("\n");
       front = front->next;
@@ -107,7 +107,7 @@ int get_size(song_node * front){
 song_node * rand_song(song_node * front){
   int length = get_size(front);
   sranddev();
-  int place = rand() / length;
+  int place = rand() % length;
   while(place){
     front = front->next;
     place--;
@@ -126,7 +126,30 @@ song_node * free_list(song_node * front){
   }
   
 }
+song_node * remove_song(song_node * front, char songName[]) {
+  if(!front){
+    return NULL;
+  }else if(!strncmp(songName,front -> name,256)){
+    song_node * newHead = front -> next;
+    free(front);
+    return newHead;
+  }
+  else{
+    song_node * prev = front;
+    song_node * current = front->next;
 
+    while(current){
+      if(!strncmp(current -> name,songName,256)){
+        prev -> next = current -> next;
+	free(current);
+	return front;
+      }
+      prev = current;
+      current = current->next;
+    }
+    return front;
+  }
+}
 int main(){
   
   song_node * head; 
@@ -135,6 +158,10 @@ int main(){
   
   char song2[256] = "Take On Me";
   char art2[256] = "A-Ha";
+
+  char song3[256] = "Rolling in the Deep";
+  char art3[256] = "Adele";
+
   printf("print 1\n");
   print_list(head);
   
@@ -143,11 +170,24 @@ int main(){
   print_list(head);
   
   head = insert_song(head,song2,art2);
+  head = insert_song(head,song3,art3);
+
   printf("print 3\n"); 
   print_list(head);
   
-  head = free_list(head);
-  printf("print 4\n"); 
+  song_node * rando = rand_song(head);
+  printf("print 4\n");
+  print_song(rando);
+  
+  head = remove_song(head,rando->name);
+  
+  printf("print 5\n");
   print_list(head);
+
+  head = free_list(head);
+  printf("print 6\n"); 
+  print_list(head);
+  
+  
   return 0;
 }
